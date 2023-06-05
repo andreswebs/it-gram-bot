@@ -1,0 +1,49 @@
+---
+name: Build and push to ECR
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_push:
+    name: Build and Push to ECR
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        id: checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        id: aws-credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-session-name: gh-actions
+          role-to-assume: ${{ vars.IAM_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build
+        env:
+          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+          ECR_REPO_NAME: ${{ vars.ECR_REPO_NAME }}
+          DEFAULT_TAG: ${{ vars.DEFAULT_TAG }}
+          IMAGE_TAG: $${{ github.sha }}
+        run: |
+          ECR_REPO="${ECR_REGISTRY}/${ECR_REPO_NAME}"
+          IMAGE="${ECR_REPO}:${IMAGE_TAG}"
+          docker build --tag "${IMAGE}" .
+          docker tag "${IMAGE}" "${ECR_REPO}:${DEFAULT_TAG}"
+          docker push "${IMAGE}"
+          echo "::set-output name=image::${IMAGE}"
