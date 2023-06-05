@@ -1,0 +1,49 @@
+{
+  "name": "lambda-container-template",
+  "version": "0.1.0",
+  "description": "\"Template for AWS Lambda container images\"",
+  "author": "Andre Silva <andreswebs@pm.me>",
+  "license": "Unlicense",
+  "main": "dist/app.js",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=18.x"
+  },
+  "scripts": {
+    "local:ts": "npx ts-node src/app.ts",
+    "build": "rimraf ./dist && tsc",
+    "watch": "tsc -w",
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.115",
+    "@types/node": "^20.2.1",
+    "@types/node-fetch": "^2.6.4",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "eslint": "^8.41.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^1.8.0",
+    "@aws-lambda-powertools/metrics": "^1.8.0",
+    "@aws-lambda-powertools/tracer": "^1.8.0",
+    "@aws-sdk/client-ssm": "^3.341.0",
+    "@middy/core": "^4.4.3",
+    "@middy/error-logger": "^4.4.3",
+    "@middy/http-error-handler": "^4.4.3",
+    "@middy/http-header-normalizer": "^4.4.3",
+    "@middy/http-json-body-parser": "^4.4.3",
+    "@middy/http-router": "^4.5.0",
+    "@middy/ssm": "^4.4.3",
+    "grammy": "^1.16.1"
+  }
+}
