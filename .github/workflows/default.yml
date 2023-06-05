@@ -39,7 +39,7 @@ jobs:
           ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
           ECR_REPO_NAME: ${{ vars.ECR_REPO_NAME }}
           DEFAULT_TAG: ${{ vars.DEFAULT_TAG }}
-          IMAGE_TAG: $${{ github.sha }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           ECR_REPO="${ECR_REGISTRY}/${ECR_REPO_NAME}"
           IMAGE="${ECR_REPO}:${IMAGE_TAG}"
