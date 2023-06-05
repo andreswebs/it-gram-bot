@@ -8,6 +8,10 @@ permissions:
 on:
   release:
     type: [ released ]
+    paths:
+      - ''
+      - '!.github/workflows/'
+      - '.github/workflows/release.yml'
 
 jobs:
   build_and_push:
