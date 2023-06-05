@@ -9,7 +9,10 @@ on:
   push:
     branches:
       - main
-
+    paths:
+      - ''
+      - '!.github/workflows/'
+      - '.github/workflows/default.yml'
 jobs:
   build_and_push:
     name: Build and Push to ECR
