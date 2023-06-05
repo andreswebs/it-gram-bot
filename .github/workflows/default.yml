@@ -46,4 +46,5 @@ jobs:
           docker build --tag "${IMAGE}" .
           docker tag "${IMAGE}" "${ECR_REPO}:${DEFAULT_TAG}"
           docker push "${IMAGE}"
+          docker push "${ECR_REPO}:${DEFAULT_TAG}"
           echo "::set-output name=image::${IMAGE}"
