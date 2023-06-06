@@ -7,7 +7,7 @@ permissions:
 
 on:
   release:
-    type: [ published ]
+    types: [ published ]
     paths:
       - ''
       - '!.github/workflows/'
