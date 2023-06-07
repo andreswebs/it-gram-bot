@@ -92,4 +92,5 @@ jobs:
           aws ssm put-parameter \
             --name "${{ inputs.image-param }}" \
             --value "${{ steps.build.outputs.image }}" \
-            --type String
+            --type String \
+            --overwrite
