@@ -6,21 +6,23 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [ published ]
     paths:
       - ''
       - '!.github/workflows/'
       - '.github/workflows/ecr.yml'
-      - '.github/workflows/default.yml'
+      - '.github/workflows/release.yml'
+
 jobs:
+
   build_and_push:
     uses: ./.github/workflows/ecr.yml
     with:
+      environment: live
       runs-on: ubuntu-latest
       aws-region: ${{ vars.AWS_REGION }}
-      role-to-assume: ${{ vars.IAM_ROLE_ARN }}
+      role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
       ecr-repo-name: ${{ vars.ECR_REPO_NAME }}
-      default-tag: ${{ vars.DEFAULT_TAG }}
-      image-tag: ${{ github.sha }}
+      image-tag: ${{ github.ref_name }}
+      image-param: ${{ vars.BOT_WEBHOOK_IMAGE_PARAM }}

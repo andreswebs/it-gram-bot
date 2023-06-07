@@ -8,6 +8,9 @@ permissions:
 on:
   workflow_call:
     inputs:
+      environment:
+        required: true
+        type: string
       aws-region:
         required: true
         type: string
@@ -31,10 +34,15 @@ on:
       image-tag:
         required: true
         type: string
+      image-param:
+        required: true
+        type: string
+
 
 jobs:
-  prepare_ecr_access:
+  build_and_push:
     runs-on: ${{ inputs.runs-on }}
+    environment: ${{ inputs.environment }}
     steps:
 
       - name: Checkout Repository
@@ -62,8 +70,8 @@ jobs:
           IMAGE="${ECR_REPO}:${IMAGE_TAG}"
           docker build --tag "${IMAGE}" .
           docker push "${IMAGE}"
-          echo "::set-output name=ecr-repo::${ECR_REPO}"
-          echo "::set-output name=image::${IMAGE}"
+          echo "ecr-repo=${ECR_REPO}" >> $GITHUB_OUTPUT
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
 
       - name: Push default tag
         if: inputs.default-tag != ''
@@ -74,3 +82,10 @@ jobs:
         run: |
           docker tag "${IMAGE}" "${ECR_REPO}:${DEFAULT_TAG}"
           docker push "${ECR_REPO}:${DEFAULT_TAG}"
+
+      - name: Update SSM parameter
+        run: |
+          aws ssm put-parameter \
+            --name "${{ inputs.image-param }}" \
+            --value "${{ steps.build.outputs.image }}" \
+            --type String
