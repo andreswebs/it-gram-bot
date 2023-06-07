@@ -8,9 +8,6 @@ permissions:
 on:
   workflow_call:
     inputs:
-      environment:
-        required: true
-        type: string
       aws-region:
         required: true
         type: string
@@ -38,11 +35,18 @@ on:
         required: true
         type: string
 
+    outputs:
+      image:
+        description: The full image URI used in the container registry
+        value: ${{ jobs.build.outputs.image }}
 
 jobs:
-  build_and_push:
+  build:
     runs-on: ${{ inputs.runs-on }}
-    environment: ${{ inputs.environment }}
+
+    outputs:
+      filename: ${{ steps.tf-plan.outputs.filename }}
+
     steps:
 
       - name: Checkout Repository

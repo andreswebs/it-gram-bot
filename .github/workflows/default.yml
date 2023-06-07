@@ -1,28 +1,28 @@
 ---
-name: Build and push to ECR
+name: Build/Push ECR - dev
 
 permissions:
   id-token: write
   contents: read
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches:
+      - main
     paths:
       - ''
       - '!.github/workflows/'
       - '.github/workflows/ecr.yml'
-      - '.github/workflows/release.yml'
+      - '.github/workflows/default.yml'
 
 jobs:
-
-  build_and_push:
+  build:
     uses: ./.github/workflows/ecr.yml
     with:
-      environment: live
       runs-on: ubuntu-latest
       aws-region: ${{ vars.AWS_REGION }}
       role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
       ecr-repo-name: ${{ vars.ECR_REPO_NAME }}
-      image-tag: ${{ github.ref_name }}
-      image-param: ${{ vars.BOT_WEBHOOK_IMAGE_PARAM }}
+      default-tag: ${{ vars.DEFAULT_TAG }}
+      image-tag: ${{ github.sha }}
+      image-param: ${{ vars.BOT_WEBHOOK_IMAGE_PARAM_DEV }}
