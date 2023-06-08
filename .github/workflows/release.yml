@@ -1,5 +1,5 @@
 ---
-name: Build/Push ECR - live
+name: Build / Push ECR / Deploy - live
 
 permissions:
   id-token: write

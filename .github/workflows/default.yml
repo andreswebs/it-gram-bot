@@ -1,5 +1,5 @@
 ---
-name: Build/Push ECR - dev
+name: Build / Push ECR / Deploy - dev
 
 permissions:
   id-token: write
@@ -16,6 +16,7 @@ on:
       - '.github/workflows/default.yml'
 
 jobs:
+
   build:
     uses: ./.github/workflows/ecr.yml
     with:
@@ -26,3 +27,20 @@ jobs:
       default-tag: ${{ vars.DEFAULT_TAG }}
       image-tag: ${{ github.sha }}
       image-param: ${{ vars.BOT_WEBHOOK_IMAGE_PARAM_DEV }}
+
+  deploy:
+    name:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Deploy Infra
+        uses: ./.github/actions/repo-dispatch
+        with:
+          aws-region: ${{ vars.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
+          token-param: ${{ vars.INFRA_TOKEN_PARAM }}
+          repository: ${{ vars.INFRA_GITHUB_REPO }}
+          event-type: dev
