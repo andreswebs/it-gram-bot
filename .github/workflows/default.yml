@@ -29,15 +29,15 @@ jobs:
       image-param: ${{ vars.BOT_WEBHOOK_IMAGE_PARAM_DEV }}
 
   deploy:
-    name:
     runs-on: ubuntu-latest
+    environment: dev
     needs: [ build ]
     steps:
 
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Deploy Infra
+      - name: Trigger Infra Deploy
         uses: ./.github/actions/repo-dispatch
         with:
           aws-region: ${{ vars.AWS_REGION }}
