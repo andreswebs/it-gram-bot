@@ -8,11 +8,6 @@ permissions:
 on:
   release:
     types: [ published ]
-    paths:
-      - ''
-      - '!.github/workflows/'
-      - '.github/workflows/ecr.yml'
-      - '.github/workflows/release.yml'
 
 jobs:
 
@@ -42,4 +37,4 @@ jobs:
           role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
           token-param: ${{ vars.INFRA_TOKEN_PARAM }}
           repository: ${{ vars.INFRA_GITHUB_REPO }}
-          event-type: live
+          event-type: live-${{ github.repository }}

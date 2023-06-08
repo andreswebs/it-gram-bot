@@ -61,6 +61,7 @@ async function botWebhook(
   // TODO: forward message to queue for handling
 
   await bot.api.sendDice(update.message.chat.id, '🎲');
+  await bot.api.sendDice(update.message.chat.id, '🎲');
 
   return {
     statusCode: 200,

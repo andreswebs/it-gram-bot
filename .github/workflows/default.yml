@@ -7,13 +7,7 @@ permissions:
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - ''
-      - '!.github/workflows/'
-      - '.github/workflows/ecr.yml'
-      - '.github/workflows/default.yml'
+    branches: [ main ]
 
 jobs:
 
@@ -44,4 +38,4 @@ jobs:
           role-to-assume: ${{ vars.AWS_IAM_ROLE_ARN }}
           token-param: ${{ vars.INFRA_TOKEN_PARAM }}
           repository: ${{ vars.INFRA_GITHUB_REPO }}
-          event-type: dev
+          event-type: dev-${{ github.repository }}
