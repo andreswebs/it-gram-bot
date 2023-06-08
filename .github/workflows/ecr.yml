@@ -1,6 +1,4 @@
 ---
-name: Build and push to ECR
-
 permissions:
   id-token: write
   contents: read
