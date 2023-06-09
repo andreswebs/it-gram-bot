@@ -44,6 +44,7 @@
     "@middy/http-json-body-parser": "^4.5.0",
     "@middy/http-router": "^4.5.0",
     "@middy/ssm": "^4.5.0",
-    "grammy": "^1.16.1"
+    "grammy": "^1.16.1",
+    "openai": "^3.2.1"
   }
 }

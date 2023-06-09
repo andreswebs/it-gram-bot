@@ -13,4 +13,17 @@ if (!botTokenParam) {
   throw new Error('missing env var: SSM_PARAM_TELEGRAM_BOT_TOKEN}');
 }
 
-export { serviceName, region, executionEnv, botTokenParam, healthcheckPath };
+const openAITokenParam = process.env.SSM_PARAM_OPENAI_TOKEN;
+
+if (!openAITokenParam) {
+  throw new Error('missing env var: SSM_PARAM_OPENAI_TOKEN}');
+}
+
+export {
+  serviceName,
+  region,
+  executionEnv,
+  botTokenParam,
+  openAITokenParam,
+  healthcheckPath,
+};

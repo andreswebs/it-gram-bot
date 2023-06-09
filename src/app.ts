@@ -14,11 +14,13 @@ import { logger, tracer, metrics } from './aws-powertools';
 
 import { STATUS_CODES } from 'node:http';
 
-import { botTokenParam, healthcheckPath } from './constants';
+import { botTokenParam, openAITokenParam, healthcheckPath } from './constants';
 import type { BotContext } from './types';
 
 import { Bot } from 'grammy';
 import { Update } from 'grammy/types';
+
+import { createPrompt } from './utils';
 
 let bot: Bot; // cache
 
@@ -53,6 +55,8 @@ async function botWebhook(
     }
   }
 
+  const prompt = createPrompt(context.openAIToken);
+
   // TODO: actual typing and validation
   const update = body as unknown as Update;
 
@@ -60,13 +64,15 @@ async function botWebhook(
 
   // TODO: forward message to queue for handling
 
-  await bot.api.sendDice(update.message.chat.id, '🎲');
-
-  // try {
-  //   await bot.api.sendMessage(update.message.chat.id, 'Hello');
-  // } catch (e) {
-  //   logger.error(e);
-  // }
+  try {
+    const reply = await prompt(update.message.text);
+    await bot.api.sendMessage(update.message.chat.id, reply);
+  } catch (e) {
+    logger.error(e);
+    await bot.api.sendMessage(update.message.chat.id, 'BROKEN TEA POT');
+    await bot.api.sendMessage(update.message.chat.id, "here's some dice:");
+    await bot.api.sendDice(update.message.chat.id, '🎲');
+  }
 
   return {
     statusCode: 200,
@@ -94,6 +100,7 @@ handler
     ssm({
       fetchData: {
         botToken: botTokenParam,
+        openAIToken: openAITokenParam,
       },
       setToContext: true,
     })
