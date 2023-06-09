@@ -62,6 +62,7 @@ async function botWebhook(
 
   await bot.api.sendDice(update.message.chat.id, '🎲');
   await bot.api.sendDice(update.message.chat.id, '🎲');
+  await bot.api.sendDice(update.message.chat.id, '🎲');
 
   return {
     statusCode: 200,
