@@ -13,8 +13,7 @@ function createPrompt(apiKey: string) {
 
     const systemMsg: ChatCompletionRequestMessage = {
       role: 'system',
-      content:
-        'You are a research assistant that can work in multiple languages. First identify the language the user is using, then reply in their native language.',
+      content: 'You are a research assistant.',
     };
 
     const userMsg: ChatCompletionRequestMessage = {
