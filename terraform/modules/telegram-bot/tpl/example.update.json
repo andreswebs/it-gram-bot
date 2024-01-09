@@ -1,0 +1,25 @@
+{
+  "update_id": 1,
+  "channel_post": {
+    "message_id": 67,
+    "sender_chat": {
+      "id": -1,
+      "title": "test",
+      "type": "channel"
+    },
+    "chat": {
+      "id": -1,
+      "title": "test",
+      "type": "channel"
+    },
+    "date": 1,
+    "text": "/test",
+    "entities": [
+      {
+        "offset": 0,
+        "length": 23,
+        "type": "bot_command"
+      }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+---
+on:
+  workflow_call:
+
+    inputs:
+      runs-on:
+        required: false
+        type: string
+        default: ubuntu-latest
+      filename:
+        required: false
+        type: string
+        default: terraform.tfvars
+      bot-token-param:
+        required: true
+        type: string
+      secret-token-param:
+        required: true
+        type: string
+      openai-token-param:
+        required: true
+        type: string
+      lambda-image-param:
+        required: true
+        type: string
+
+    outputs:
+      filename:
+        description: The filename used to save the tfvars
+        value: ${{ jobs.tfvars.outputs.filename }}
+
+jobs:
+
+  tfvars:
+
+    runs-on: ${{ inputs.runs-on }}
+
+    outputs:
+      filename: ${{ steps.render.outputs.filename }}
+
+    steps:
+
+      - name: Render ${{ inputs.filename }}
+        id: render
+        run: |
+          cat > ./${{ inputs.filename }} << EOF
+          bot_token_param    = "${{ inputs.bot-token-param }}"
+          secret_token_param = "${{ inputs.secret-token-param }}"
+          openai_token_param = "${{ inputs.openai-token-param }}"
+          lambda_image_param = "${{ inputs.lambda-image-param }}"
+          EOF
+          echo "filename=${{ inputs.filename }}" >> $GITHUB_OUTPUT
+
+      - name: Save ${{ inputs.filename }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.render.outputs.filename }}
+          path: ./${{ steps.render.outputs.filename }}
+          if-no-files-found: error

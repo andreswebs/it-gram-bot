@@ -1,0 +1,92 @@
+---
+openapi: 3.0.3
+
+info:
+  title: Private Telegram Bot
+  description: A private Telegram Bot webhook
+  version: 0.0.1
+
+paths:
+
+  /webhook:
+    post:
+      summary: Receive updates from Telegram
+      operationId: receiveUpdate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Update'
+      responses:
+        200:
+          description: OK
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_arn}/invocations"
+        httpMethod: "POST"
+        passthroughBehavior: "when_no_match"
+
+
+  /health:
+    get:
+      summary: Health check endpoint
+      operationId: healthCheck
+      responses:
+        200:
+          description: OK
+        500:
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        uri: "arn:aws:apigateway:${region}:lambda:path/2015-03-31/functions/${lambda_arn}/invocations"
+        httpMethod: "POST"
+        passthroughBehavior: "when_no_match"
+
+components:
+  schemas:
+    Update:
+      type: object
+      properties:
+        update_id:
+          type: integer
+        message:
+          $ref: '#/components/schemas/Message'
+    Message:
+      type: object
+      properties:
+        message_id:
+          type: integer
+        text:
+          type: string
+        chat:
+          $ref: '#/components/schemas/Chat'
+    Chat:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        type:
+          type: string
+
+    Error:
+      required:
+        - error
+      type: object
+      properties:
+        error:
+          type: string
+          description: A publishable error message for the client
